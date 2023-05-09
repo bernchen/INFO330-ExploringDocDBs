@@ -5,14 +5,21 @@ mongoClient = MongoClient("mongodb://localhost/pokemon")
 pokemonDB = mongoClient['pokemondb']
 pokemonColl = pokemonDB['pokemon_data']
 
+POKEMON_STATS = ['hp', 'attack', 'defense', 'speed', 'sp_attack', 'sp_defense']
+
 def fetch(pokemonid):
+    try:
+        pokemonid = int(pokemonid)
+    except ValueError:
+        print(f"{pokemonid} is not a valid integer.")
+        return None
     return pokemonColl.find_one({"pokedex_number":pokemonid})
 
 def battle(pokemon1, pokemon2):
     print("Let the Pokemon battle begin! ================")
     print("It's " + pokemon1['name'] + " vs " + pokemon2['name'])
 
-    for stat in ['hp', 'attack', 'defense', 'speed', 'sp_attack', 'sp_defense']:
+    for stat in POKEMON_STATS:
         if pokemon1[stat] > pokemon2[stat]:
             print(pokemon1['name'] + " has the advantage in " + stat)
         elif pokemon2[stat] > pokemon1[stat]:
